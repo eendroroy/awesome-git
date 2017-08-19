@@ -1,0 +1,7 @@
+#!/usr/bin/env zsh
+
+git shortlog -s -n -e $@ \
+  | awk '{printf("\033[37m%10s\033[m:",$1);$1="";e=$NF;$NF="";printf("\033[32m%s\033[m[\033[37m%s\033[m]\n",$0,e)}' \
+  | tr -d '<>' \
+  | column -s':' -t
+

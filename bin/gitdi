@@ -1,0 +1,13 @@
+#!/usr/bin/env zsh
+
+git log --oneline --author="$1" --shortstat --pretty=tformat:'count:1' \
+  | awk -v a="$(echo "$1" | awk '$NF~/</ {$NF=""} {printf("%s",$0)}'| sed 's| $||g')" \
+    -v e="$(echo $1 | awk '$NF~/</ {v=$NF}; END {printf("%s",v)}' | sed 's| $||g;s|[<>]||g')" \
+    '$1~/count:/ {c+=1}; \
+     $2~/file[s]{0,1}/ && $3~/changed/ {f+=$1}; \
+     $5~/insertion[s]{0,1}/ {i+=$4} ; \
+     $7~/deletion[s]{0,1}/ {d+=$6}; \
+     $5~/deletion[s]{0,1}/ {d+=$4} END \
+     {printf("\033[96m%s \033[m;\033[90m%s\033[m;c:\033[93m%s;\033[mf:\033[94m%d\033[m;+:\033[92m%d\033[m;-:\033[91m%d\033[m\n", a, e, c, f, i, d) }' \
+  | column -s';' -t
+

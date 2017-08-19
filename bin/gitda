@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+
+git shortlog -s -n \
+  | awk '{$1="";printf("%s\n",$0)}' \
+  | xargs -L1 -I{} git di "{}" \
+  | sed 's|  |;|g' \
+  | column -s';' -t
+
