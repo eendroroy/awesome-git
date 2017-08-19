@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+
+git log --oneline --no-merges --pretty="#%Cred%h%Creset %C(bold blue)%an%C(reset) [%ae]," --stat \
+  | grep -v \| \
+  | tr "\n" " " \
+  | tr "#" "\n" \
+  | column -s',' -t \
+  | less -RFX
+
