@@ -4,6 +4,7 @@ git log --oneline --no-merges --pretty="#%Cred%h%Creset %C(bold blue)%an%C(reset
   | grep -v \| \
   | tr "\n" " " \
   | tr "#" "\n" \
+  | tail +2 \
   | column -s',' -t \
   | less -RFX
 
