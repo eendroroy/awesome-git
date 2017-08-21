@@ -1,0 +1,6 @@
+#!/usr/bin/env zsh
+
+__ROOT="`git rev-parse --show-toplevel`"
+__IGNORE_FILE_PATH="/`realpath --relative-to="$__ROOT" $1`"
+echo "$__IGNORE_FILE_PATH" >> $__ROOT/.gitignore
+
