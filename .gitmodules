@@ -1,0 +1,3 @@
+[submodule "libs/recall"]
+	path = libs/recall
+	url = https://github.com/Fakerr/git-recall.git
