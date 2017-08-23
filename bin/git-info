@@ -30,8 +30,11 @@ for branch in `\git branch -v -a --sort=-committerdate | awk "/${__MAIN_REMOTE}/
     state="${__GREEN}active${__RESET}"
   fi
   echo -n "  ${__UNDERLINE}${__BOLD}${__RED}${branch}${__RESET}(${state})"
-  if [[ `git branch -r | grep -c '^'` != 1 ]]; then 
+  if [[ `git branch -r | grep -c "${__MAIN_REMOTE}/HEAD"` != 0 ]]; then 
     echo -n " ${__BOLD}${__WHITE}`git rev-list --left-right --count ${__MAIN_REMOTE}/HEAD...${__MAIN_REMOTE}/${branch} | awk '{print $1"|"$2}'`${__RESET}"
+  fi
+  if [[ `git branch -r | grep -c "${__MAIN_REMOTE}/master"` != 0 ]]; then 
+    echo -n " ${__BOLD}${__WHITE}`git rev-list --left-right --count ${__MAIN_REMOTE}/master...${__MAIN_REMOTE}/${branch} | awk '{print $1"|"$2}'`${__RESET}"
   fi
   echo -n " ( C:${__BOLD}${__WHITE}`git log --oneline \"${__MAIN_REMOTE}/${branch}\" | awk '{c+=1} END {print c}'`${__RESET}"
   echo -n " A:${__BOLD}${__WHITE}`git shortlog -s -n -e \"${__MAIN_REMOTE}/${branch}\" | awk '{c+=1} END {print c}'`${__RESET} )"
