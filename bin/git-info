@@ -14,16 +14,18 @@ __BACKGROUND='\033[7m'
 echo "${__BACKGROUND}Origins${__RESET}"
 for remote in `git remote -v | awk '{print $1}' | uniq`; do
     ([[ -z $__MAIN_REMOTE ]] || [[ $remote == 'origin' ]]) && __MAIN_REMOTE=$remote
-  echo "  ${__GREEN}${__UNDERLINE}${__BOLD}${remote}${__RESET}"
+  echo "  ${__UNDERLINE}${__BOLD}${__GREEN}${remote}${__RESET}"
   git remote -v | grep "^${remote}" | awk '{print "    "$3";"$2}' | column -s';' -t
 done
 
 echo "\n${__BACKGROUND}Branches${__RESET}"
 for branch in `\git branch -v -a | awk "/${__MAIN_REMOTE}/"'{print $1}' | sed "s|remotes/${__MAIN_REMOTE}/||g"`; do
   echo -n "  ${__UNDERLINE}${__BOLD}${__RED}${branch}${__RESET}"
-  echo -n "( commits: ${__BOLD}${__WHITE}`git log --oneline \"${__MAIN_REMOTE}/${branch}\" | awk '{c+=1} END {print c}'`${__RESET})"
-  echo -n " | authors: ${__BOLD}${__WHITE}`git shortlog -s -n -e \"${__MAIN_REMOTE}/${branch}\" | awk '{c+=1} END {print c}'`${__RESET})"
-  echo "\n  last change: `git log --no-merges --pretty=format:'%C(bold green)%s%C(reset) %C(blue)%cr%C(reset) by %C(yellow)%an%C(reset)' -1 \"${__MAIN_REMOTE}/${branch}\"`\n"
+  echo -n " ${__BOLD}${__WHITE}`git rev-list --left-right --count ${__MAIN_REMOTE}/HEAD...${__MAIN_REMOTE}/${branch} | awk '{print $1"|"$2}'`${__RESET}"
+  echo -n " ( C:${__BOLD}${__WHITE}`git log --oneline \"${__MAIN_REMOTE}/${branch}\" | awk '{c+=1} END {print c}'`${__RESET}"
+  echo -n " A:${__BOLD}${__WHITE}`git shortlog -s -n -e \"${__MAIN_REMOTE}/${branch}\" | awk '{c+=1} END {print c}'`${__RESET} )"
+  echo "\n  last change: `git log --pretty=format:'%C(bold green)%s%C(reset) %C(blue)%cr%C(reset) by %C(yellow)%an%C(reset)' -1 \"${__MAIN_REMOTE}/${branch}\"`"
+  echo "  last 7 days: `git shortlog -sn --after="$(date -v-7d +%F)" --before="$(date +%F) 23:59" "${__MAIN_REMOTE}/${branch}" | awk '{c=$1};$1="";{printf("%s (%s)",$0,c)}'`"
 done
 
 unset __RESET __UNDERLINE __BOLD __MILD __BACKGROUND __RED __GREEN __YELLOW __BLUE __WHITE remote branch __MAIN_REMOTE
