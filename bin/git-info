@@ -36,7 +36,7 @@ for branch in `\git branch -v -a --sort=-committerdate | awk "/${__MAIN_REMOTE}/
   echo -n " ( C:${__BOLD}${__WHITE}`git log --oneline \"${__MAIN_REMOTE}/${branch}\" | awk '{c+=1} END {print c}'`${__RESET}"
   echo -n " A:${__BOLD}${__WHITE}`git shortlog -s -n -e \"${__MAIN_REMOTE}/${branch}\" | awk '{c+=1} END {print c}'`${__RESET} )"
   echo "\n  last change: `git log --pretty=format:'%C(bold green)%s%C(reset) %C(blue)%cr%C(reset) by %C(yellow)%an%C(reset)' -1 \"${__MAIN_REMOTE}/${branch}\"`"
-  echo "  last 7 days: `git shortlog -sn --after="$(date -v-7d +%F)" --before="$(date +%F) 23:59" "${__MAIN_REMOTE}/${branch}" | awk "{c=\\$1};\\$1=\\"\\";{printf(\\"${__RED}%s${__RESET} (${__GREEN}%s${__RESET})\\",\\$0,c)}"`\n"
+  echo "  last 7 days: `git shortlog -sn --after="$(date -v-8d +%F) 23:59:59" "${__MAIN_REMOTE}/${branch}" | awk "{c=\\$1};\\$1=\\"\\";{printf(\\"${__RED}%s${__RESET} (${__GREEN}%s${__RESET})\\",\\$0,c)}"`\n"
 done
 
 unset __RESET __UNDERLINE __BOLD __MILD __BACKGROUND __RED __GREEN __YELLOW __BLUE __WHITE remote branch __MAIN_REMOTE state
