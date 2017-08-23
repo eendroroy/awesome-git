@@ -41,4 +41,9 @@ for branch in `\git branch -v -a --sort=-committerdate | awk "/${__MAIN_REMOTE}/
   echo "  last 7 days: `git shortlog -sn --after="$(date -v-8d +%F) 23:59:59" "${__MAIN_REMOTE}/${branch}" | awk "{c=\\$1};\\$1=\\"\\";{printf(\\"${__RED}%s${__RESET} (${__GREEN}%s${__RESET})\\",\\$0,c)}"`\n"
 done
 
+if git tag > /dev/null 2>/dev/null; then
+  echo "\n${__BACKGROUND}Tags${__RESET}"
+  git tag -n --sort=-creatordate | awk "{printf(\"  ${__RED}${__BOLD}${__UNDERLINE}%s${__RESET};;\",\$1)}; \$1=\"\"; {printf(\"${__BLUE}%s${__RESET}\n\",\$0)}" | column -s';;' -t
+fi
+
 unset __RESET __UNDERLINE __BOLD __MILD __BACKGROUND __RED __GREEN __YELLOW __BLUE __WHITE remote branch __MAIN_REMOTE state
