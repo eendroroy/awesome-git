@@ -12,7 +12,7 @@
 
 ##### [zplug](https://github.com/zplug/zplug):
 
-    zplug eendroroy/awesome-git
+    zplug "eendroroy/awesome-git"
 
 ## asciicast
 [![asciicast](http://asciinema.org/a/134640.png)](https://asciinema.org/a/134640)
