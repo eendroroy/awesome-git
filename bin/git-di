@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+git rev-parse --git-dir > /dev/null || exit
+
 git log --oneline --author="$1" --shortstat --pretty=tformat:'count:1' \
   | awk -v a="$(echo "$1" | awk '$NF~/</ {$NF=""} {printf("%s",$0)}'| sed 's| $||g')" \
     -v e="$(echo $1 | awk '$NF~/</ {v=$NF}; END {printf("%s",v)}' | sed 's| $||g;s|[<>]||g')" \

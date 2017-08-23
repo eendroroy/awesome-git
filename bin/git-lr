@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+git rev-parse --git-dir > /dev/null || exit
+
 git log --oneline --no-merges --pretty="#%Cred%h%Creset %C(bold blue)%an%C(reset) [%ae]," --stat \
   | grep -v \| \
   | sed -e ':a' -e 'N' -e '$!ba' -e 's|\n| |g' \

@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+git rev-parse --git-dir > /dev/null || exit
+
 git shortlog -s -n -e \
   | awk '{$1="";printf("%s\n",$0)}' \
   | xargs -L1 -I{} git di "{}" \

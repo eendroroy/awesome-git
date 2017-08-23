@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+git rev-parse --git-dir > /dev/null || exit
+
 __RESET='\033[m'
 __GREEN='\033[32m'
 __L_GREEN='\033[92m'

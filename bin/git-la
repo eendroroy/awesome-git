@@ -1,4 +1,6 @@
 #!/usr/bin/env zsh
 
+git rev-parse --git-dir > /dev/null || exit
+
 git config -l | grep alias | cut -c 7-
 
