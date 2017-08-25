@@ -31,7 +31,8 @@ for branch in `\git branch -v -a --sort=-committerdate | awk "/${__MAIN_REMOTE}/
   else
     state="${__GREEN}active${__RESET}"
   fi
-  __RESULT="${__RESULT}  ${__UNDERLINE}${__BOLD}${__RED}${branch}${__RESET}(${state})${__RED}$([[ $(git rev-list --left-right --count ${branch}...${__MAIN_REMOTE}/${branch} | awk '{printf("%s%s", $1,$2)}') == "00" ]] || echo " *")${__RESET}"
+  __dirty=$(git rev-list --left-right --count "${branch}"..."${__MAIN_REMOTE}/${branch}" 2>/dev/null | awk '{printf("%s%s", $1,$2)}')
+  __RESULT="${__RESULT}  ${__UNDERLINE}${__BOLD}${__RED}${branch}${__RESET}(${state})${__RED}$([[ $__dirty == "" ]] || [[ $__dirty == "00" ]] || echo " *")${__RESET}"
   if [[ `git branch -r | grep -c "${__MAIN_REMOTE}/HEAD"` != 0 ]]; then 
     __RESULT="${__RESULT} ${__BOLD}${__WHITE}`git rev-list --left-right --count ${__MAIN_REMOTE}/HEAD...${__MAIN_REMOTE}/${branch} | awk '{print $1"|"$2}'`${__RESET}"
   elif [[ `git branch -r | grep -c "${__MAIN_REMOTE}/master"` != 0 ]]; then 
@@ -45,9 +46,9 @@ done
 
 if [[ `git tag | grep -c '^' 2>/dev/null` != 0 ]]; then
   __RESULT="${__RESULT}\n${__BACKGROUND}Tags${__RESET}\n"
-  __RESULT=${__RESULT}$(git tag -n --sort=-creatordate | awk "{printf(\"  ${__RED}${__BOLD}${__UNDERLINE}%s${__RESET};;\",\$1)}; \$1=\"\"; {printf(\"${__BLUE}%s${__RESET}\n\",\$0)}")
+  __RESULT=${__RESULT}$(git tag -n --sort=-creatordate | awk "{printf(\"  ${__RED}${__BOLD}${__UNDERLINE}%s${__RESET};;\",\$1)}; \$1=\"\"; {printf(\"${__BLUE}%s${__RESET}\n\",\$0)}" | column -s';;' -t)
 fi
 
 echo ${__RESULT}
 
-unset __RESET __UNDERLINE __BOLD __MILD __BACKGROUND __RED __GREEN __YELLOW __BLUE __WHITE remote branch __MAIN_REMOTE state __RESULT
+unset __RESET __UNDERLINE __BOLD __MILD __BACKGROUND __RED __GREEN __YELLOW __BLUE __WHITE remote branch __MAIN_REMOTE state __RESULT __dirty
