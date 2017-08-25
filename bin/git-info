@@ -31,8 +31,8 @@ for branch in `\git branch -v -a --sort=-committerdate | awk "/${__MAIN_REMOTE}/
   else
     state="${__GREEN}active${__RESET}"
   fi
-  __dirty=$(git rev-list --left-right --count "${branch}"..."${__MAIN_REMOTE}/${branch}" 2>/dev/null | awk '{printf("%s%s", $1,$2)}')
-  __RESULT="${__RESULT}  ${__UNDERLINE}${__BOLD}${__RED}${branch}${__RESET}(${state})${__RED}$([[ $__dirty == "" ]] || [[ $__dirty == "00" ]] || echo " *")${__RESET}"
+  __dirty=$(git rev-list --left-right --count "${__MAIN_REMOTE}/${branch}"..."${branch}" 2>/dev/null | awk '{printf("%s|%s", $1,$2)}')
+  __RESULT="${__RESULT}  ${__UNDERLINE}${__BOLD}${__RED}${branch}${__RESET}(${state})${__RED}$([[ $__dirty == "" ]] || [[ $__dirty == "0|0" ]] || echo " ${__dirty}")${__RESET}"
   if [[ `git branch -r | grep -c "${__MAIN_REMOTE}/HEAD"` != 0 ]]; then 
     __RESULT="${__RESULT} ${__BOLD}${__WHITE}`git rev-list --left-right --count ${__MAIN_REMOTE}/HEAD...${__MAIN_REMOTE}/${branch} | awk '{print $1"|"$2}'`${__RESET}"
   elif [[ `git branch -r | grep -c "${__MAIN_REMOTE}/master"` != 0 ]]; then 
