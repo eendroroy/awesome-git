@@ -31,7 +31,7 @@ for branch in `\git branch -v -a --sort=-committerdate | awk "/${__MAIN_REMOTE}/
   else
     state="${__GREEN}active${__RESET}"
   fi
-  __RESULT="${__RESULT}  ${__UNDERLINE}${__BOLD}${__RED}${branch}${__RESET}(${state})"
+  __RESULT="${__RESULT}  ${__UNDERLINE}${__BOLD}${__RED}${branch}${__RESET}(${state})${__RED}$([[ $(git rev-list --left-right --count ${branch}...${__MAIN_REMOTE}/${branch} | awk '{printf("%s%s", $1,$2)}') == "00" ]] || echo " *")${__RESET}"
   if [[ `git branch -r | grep -c "${__MAIN_REMOTE}/HEAD"` != 0 ]]; then 
     __RESULT="${__RESULT} ${__BOLD}${__WHITE}`git rev-list --left-right --count ${__MAIN_REMOTE}/HEAD...${__MAIN_REMOTE}/${branch} | awk '{print $1"|"$2}'`${__RESET}"
   elif [[ `git branch -r | grep -c "${__MAIN_REMOTE}/master"` != 0 ]]; then 
@@ -40,12 +40,12 @@ for branch in `\git branch -v -a --sort=-committerdate | awk "/${__MAIN_REMOTE}/
   __RESULT="${__RESULT} ( C:${__BOLD}${__WHITE}`git log --oneline \"${__MAIN_REMOTE}/${branch}\" | awk '{c+=1} END {print c}'`${__RESET}"
   __RESULT="${__RESULT} A:${__BOLD}${__WHITE}`git shortlog -s -n -e \"${__MAIN_REMOTE}/${branch}\" | awk '{c+=1} END {print c}'`${__RESET} )"
   __RESULT="${__RESULT}\n  last change: `git log --pretty=format:'%C(bold green)%s%C(reset) %C(blue)%cr%C(reset) by %C(yellow)%an%C(reset)' -1 \"${__MAIN_REMOTE}/${branch}\"`\n"
-  __RESULT="${__RESULT}  last 7 days: `git shortlog -sn --after="$(date -v-8d +%F) 23:59:59" "${__MAIN_REMOTE}/${branch}" | awk "{c=\\$1};\\$1=\\"\\";{printf(\\"${__RED}%s${__RESET} (${__GREEN}%s${__RESET})\\",\\$0,c)}"`\n"
+  __RESULT="${__RESULT}  last 7 days: `git shortlog -sn --after="$(date -v-8d +%F) 23:59:59" "${__MAIN_REMOTE}/${branch}" | awk "{c=\\$1};\\$1=\\"\\";{printf(\\"${__YELLOW}%s${__RESET} (${__GREEN}%s${__RESET})\\",\\$0,c)}"`\n"
 done
 
 if [[ `git tag | grep -c '^' 2>/dev/null` != 0 ]]; then
   __RESULT="${__RESULT}\n${__BACKGROUND}Tags${__RESET}\n"
-  __RESULT=${__RESULT}$(git tag -n --sort=-creatordate | awk "{printf(\"  ${__RED}${__BOLD}${__UNDERLINE}%s${__RESET};;\",\$1)}; \$1=\"\"; {printf(\"${__BLUE}%s${__RESET}\n\",\$0)}" | column -s';;' -t)
+  __RESULT=${__RESULT}$(git tag -n --sort=-creatordate | awk "{printf(\"  ${__RED}${__BOLD}${__UNDERLINE}%s${__RESET};;\",\$1)}; \$1=\"\"; {printf(\"${__BLUE}%s${__RESET}\n\",\$0)}")
 fi
 
 echo ${__RESULT}
