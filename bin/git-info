@@ -27,7 +27,7 @@ done
  __RESULT="${__RESULT}\n${__BACKGROUND}Branches${__RESET}\n"
 for branch in `\git branch -v -a --sort=-committerdate | awk "/${__MAIN_REMOTE}/"'{print $1}' | sed "s|remotes/${__MAIN_REMOTE}/||g" | grep -v "HEAD"`; do
   if [[ `git shortlog -s -n --after="$(date -v-3m +%F)" "${__MAIN_REMOTE}/${branch}"` == "" ]]; then
-    state="${__YELLOW}inactive${__RESET}"
+    state="${__YELLOW}stale${__RESET}"
   else
     state="${__GREEN}active${__RESET}"
   fi
