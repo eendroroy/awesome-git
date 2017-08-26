@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+
+git rev-parse --git-dir > /dev/null || exit
+
+__RESET='\033[m'
+__WHITE='\033[37m'
+__BOLD='\033[1m'
+__BACKGROUND='\033[7m'
+
+git log | grep Date | awk '{print ""$4" "$3" "$6}' | uniq -c | awk "{c=\$1};\$1=\"\";{printf(\"%s;${__BOLD}${__WHITE}%s${__RESET}\\n\",\$0,c)}" | column -s';' -t
+
+unset __RESET __UNDERLINE __BOLD __MILD __BACKGROUND __RED __GREEN __YELLOW __BLUE __WHITE remote branch __MAIN_REMOTE state __RESULT __dirty
