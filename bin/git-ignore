@@ -2,9 +2,11 @@
 
 git rev-parse --git-dir > /dev/null || exit
 
-__ROOT="`git rev-parse --show-toplevel`"
-__IGNORE_FILE_PATH="`realpath --relative-to="$__ROOT" $1`"
-echo "$__IGNORE_FILE_PATH" >> $__ROOT/.gitignore
-echo "  \033[32m==> $__IGNORE_FILE_PATH added to .gitignore\033[m"
+for item in $@; do
+  __ROOT="`git rev-parse --show-toplevel`"
+  __IGNORE_FILE_PATH="`realpath --relative-to="$__ROOT" ${item}`"
+  echo "$__IGNORE_FILE_PATH" >> $__ROOT/.gitignore
+  echo "  \033[32m==> $__IGNORE_FILE_PATH added to .gitignore\033[m"
+done
 unset __ROOT __IGNORE_FILE_PATH
 
