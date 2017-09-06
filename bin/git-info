@@ -15,6 +15,14 @@ __BOLD='\033[1m'
 __MILD='\033[2m'
 __BACKGROUND='\033[7m'
 
+if [ "$(uname)" == "Darwin" ]; then
+  __3MONTH_AGO=$(date -v-3m +%F)
+  __7DAY_AGO=$(date -v-8d +%F)
+elif [ "$(uname)" == "Linux" ]; then
+  __3MONTH_AGO=$(date -d "-3 months" +%F)
+  __7DAY_AGO=$(date -d "+8 days" +%F)
+fi
+
 __RESULT=""
 
 __RESULT="${__RESULT}${__BACKGROUND}REMOTES${__RESET}\n"
@@ -47,7 +55,7 @@ done
 
 __RESULT="${__RESULT}\n${__BACKGROUND}${__BLUE}${__BOLD}(local)${__RESET}\n"
 for branch in `\git branch -v -a --sort=-committerdate | grep -v "remotes" | sed 's|*||' | awk '{print $1}' | grep -v "HEAD"`; do
-  if [[ `git shortlog -s -n --after="$(date -v-3m +%F)" "${__MAIN_REMOTE}/${branch}"` == "" ]]; then
+  if [[ `git shortlog -s -n --after="${__3MONTH_AGO}" "${__MAIN_REMOTE}/${branch}"` == "" ]]; then
     state="${__YELLOW}stale${__RESET}"
   else
     state="${__GREEN}active${__RESET}"
@@ -57,7 +65,7 @@ for branch in `\git branch -v -a --sort=-committerdate | grep -v "remotes" | sed
   __RESULT="${__RESULT} ( C:${__BOLD}${__WHITE}`git log --oneline \"${branch}\" | awk '{c+=1} END {print c}'`${__RESET}"
   __RESULT="${__RESULT} A:${__BOLD}${__WHITE}`git shortlog -s -n -e \"${branch}\" | awk '{c+=1} END {print c}'`${__RESET} )"
   __RESULT="${__RESULT}\n  last change: `git log --pretty=format:'%C(bold green)%s%C(reset) %C(blue)%cr%C(reset) by %C(yellow)%an%C(reset)' -1 \"${branch}\"`\n"
-  __RESULT="${__RESULT}  last 7 days: `git shortlog -sn --after="$(date -v-8d +%F) 23:59:59" "${branch}" | awk "{c=\\$1};\\$1=\\"\\";{printf(\\"${__YELLOW}%s${__RESET} (${__GREEN}%s${__RESET})\\",\\$0,c)}"`\n"
+  __RESULT="${__RESULT}  last 7 days: `git shortlog -sn --after="${__7DAY_AGO} 23:59:59" "${branch}" | awk "{c=\\$1};\\$1=\\"\\";{printf(\\"${__YELLOW}%s${__RESET} (${__GREEN}%s${__RESET})\\",\\$0,c)}"`\n"
 done
 
 if [[ `git tag | grep -c '^' 2>/dev/null` != 0 ]]; then
@@ -67,4 +75,4 @@ fi
 
 echo ${__RESULT}
 
-unset __RESET __UNDERLINE __BOLD __MILD __BACKGROUND __RED __GREEN __YELLOW __BLUE __WHITE remote branch __MAIN_REMOTE state __RESULT __dirty
+unset __RESET __UNDERLINE __BOLD __MILD __BACKGROUND __RED __GREEN __YELLOW __BLUE __WHITE remote branch __MAIN_REMOTE state __RESULT __dirty __3MONTH_AGO __7DAY_AGO
