@@ -15,10 +15,10 @@ __BOLD='\033[1m'
 __MILD='\033[2m'
 __BACKGROUND='\033[7m'
 
-if [ "$(uname)" == "Darwin" ]; then
+if [[ "$(uname)" == "Darwin" ]]; then
   __3MONTH_AGO=$(date -v-3m +%F)
   __7DAY_AGO=$(date -v-8d +%F)
-elif [ "$(uname)" == "Linux" ]; then
+elif [[ "$(uname)" == "Linux" ]]; then
   __3MONTH_AGO=$(date -d "-3 months" +%F)
   __7DAY_AGO=$(date -d "+8 days" +%F)
 fi
