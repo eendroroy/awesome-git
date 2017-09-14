@@ -35,7 +35,7 @@ done
 for remote in `git remote -v | awk '{print $1}' | uniq`; do
   __RESULT="${__RESULT}\n${__GREEN}${__BACKGROUND}${__BOLD}(${remote})${__RESET}\n"
   for branch in `\git branch -v -a --sort=-committerdate | awk "/remotes\/${remote}/"'{print $1}' | sed "s|remotes/${remote}/||g" | grep -v "HEAD"`; do
-    if [[ `git shortlog -s -n --after="$(date -v-3m +%F)" "${remote}/${branch}"` == "" ]]; then
+    if [[ `git shortlog -s -n --after="${__3MONTH_AGO}" "${remote}/${branch}"` == "" ]]; then
       state="${__YELLOW}stale${__RESET}"
     else
       state="${__GREEN}active${__RESET}"
@@ -49,7 +49,7 @@ for remote in `git remote -v | awk '{print $1}' | uniq`; do
     __RESULT="${__RESULT} ( C:${__BOLD}${__WHITE}`git log --oneline \"${remote}/${branch}\" | awk '{c+=1} END {print c}'`${__RESET}"
     __RESULT="${__RESULT} A:${__BOLD}${__WHITE}`git shortlog -s -n -e \"${remote}/${branch}\" | awk '{c+=1} END {print c}'`${__RESET} )"
     __RESULT="${__RESULT}\n  last change: `git log --pretty=format:'%C(bold green)%s%C(reset) %C(blue)%cr%C(reset) by %C(yellow)%an%C(reset)' -1 \"${remote}/${branch}\"`\n"
-    __RESULT="${__RESULT}  last 7 days: `git shortlog -sn --after="$(date -v-8d +%F) 23:59:59" "${remote}/${branch}" | awk "{c=\\$1};\\$1=\\"\\";{printf(\\"${__YELLOW}%s${__RESET} (${__GREEN}%s${__RESET})\\",\\$0,c)}"`\n"
+    __RESULT="${__RESULT}  last 7 days: `git shortlog -sn --after="${__7DAY_AGO} 23:59:59" "${remote}/${branch}" | awk "{c=\\$1};\\$1=\\"\\";{printf(\\"${__YELLOW}%s${__RESET} (${__GREEN}%s${__RESET})\\",\\$0,c)}"`\n"
   done
 done
 
