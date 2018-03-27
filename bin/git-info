@@ -34,7 +34,7 @@ done
 
 for remote in `git remote -v | awk '{print $1}' | uniq`; do
   __RESULT="${__RESULT}\n${__GREEN}${__BACKGROUND}${__BOLD}(${remote})${__RESET}\n"
-  for branch in `\git branch -v -a --sort=-committerdate | awk "/remotes\/${remote}/"'{print $1}' | sed "s|remotes/${remote}/||g" | grep -v "HEAD"`; do
+  for branch in `\git branch -v -a --sort=-committerdate | awk "/remotes\/${remote}\//"'{print $1}' | sed "s|remotes/${remote}/||g" | grep -v "HEAD"`; do
     if [[ `git shortlog -s -n --after="${__3MONTH_AGO}" "${remote}/${branch}"` == "" ]]; then
       state="${__YELLOW}stale${__RESET}"
     else
