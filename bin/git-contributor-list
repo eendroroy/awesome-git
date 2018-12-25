@@ -1,9 +1,0 @@
-#!/usr/bin/env zsh
-
-git rev-parse --git-dir > /dev/null || exit
-
-git shortlog -s -n -e $@ \
-  | awk '{$1="";printf("    \033[37m%s\033[m\n",$0)}' \
-  | tr '<>' ';' \
-  | column -s';' -t
-
