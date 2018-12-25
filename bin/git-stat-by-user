@@ -2,9 +2,9 @@
 
 git rev-parse --git-dir > /dev/null || exit
 
-git shortlog -s -n -e \
+git shortlog -s -n \
   | awk '{$1="";printf("%s\n",$0)}' \
-  | xargs -L1 -I{} git di "{}" \
-  | sed 's|  |;|g;' \
+  | xargs -L1 -I{} git stat "{}" \
+  | sed 's|  |;|g' \
   | column -s';' -t
 
