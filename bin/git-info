@@ -27,7 +27,7 @@ __RESULT=""
 
 __RESULT="${__RESULT}${__BACKGROUND}REMOTES${__RESET}\n"
 for remote in `git remote -v | awk '{print $1}' | uniq`; do
-    ([[ -z $__MAIN_REMOTE ]] || [[ $remote == 'origin' ]]) && __MAIN_REMOTE=$remote
+    ([[ -z ${__MAIN_REMOTE} ]] || [[ ${remote} == 'origin' ]]) && __MAIN_REMOTE=$remote
   __RESULT="${__RESULT}  ${__UNDERLINE}${__BOLD}${__GREEN}${remote}${__RESET}\n"
   __RESULT="${__RESULT}`git remote -v | grep "^${remote}\\W" | awk '{print "  "$3";"$2}' | column -s';' -t`\n"
 done
